@@ -41,4 +41,13 @@ class nlddmTwoStimuli(Drift):
         else:
             z=self.z0
         return -self.k*(x-z*self.a)*(x-self.a)*(x+self.a) #np.sin(t*z)*self.a
+    
+    
+class nlddmDummy(Drift):
+    '''This class is called when only one stimulus type exists. It's the class
+    we used when creating the dummy figure'''
+    name="simple nl-DDM"
+    required_parameters=["k","z","a"]
+    def get_drift(self, x, t, *args,**kwargs):
+        return -self.k*(x-self.z*self.a)*(x-self.a)*(x+self.a)
 
