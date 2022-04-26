@@ -5,7 +5,7 @@ Other daughter classes that were needed when fitting the nlDDM and DDM
 @author: ihoxha
 """
 import numpy as np
-from ddm import InitialCondition, Overlay, Solution
+from ddm import InitialCondition, Overlay, Solution, LossFunction
 
 class ICIntervalRatio(InitialCondition):
     name = "Starting point range as a ratio of the distance between bounds."
@@ -53,3 +53,19 @@ class OverlayNonDecisionLR(Overlay):
             newcorr = corr
             newerr = err
         return Solution(newcorr, newerr, m, cond, undec)
+    
+class LossByMeans(LossFunction):
+    name = "Mean RT and accuracy"
+    def setup(self, dt, T_dur, **kwargs):
+        self.dt = dt
+        self.T_dur = T_dur
+    def loss(self, model):
+        sols = self.cache_by_conditions(model)
+        MSE = 0
+        for comb in self.sample.condition_combinations(required_conditions=self.required_conditions):
+            c = frozenset(comb.items())
+            subset = self.sample.subset(**comb)
+            MSE += (sols[c].prob_correct() - subset.prob_correct())**2
+            if sols[c].prob_correct() > 0:
+                MSE += (sols[c].mean_decision_time() - np.mean(list(subset)))**2
+        return MSE
