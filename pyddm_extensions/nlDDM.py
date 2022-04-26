@@ -11,7 +11,7 @@ from ddm.models import Drift
 
 #%% nlDDM classes
 '''These classes inherit from PyDDM Drift class'''
-class nlDDM_Wagenmakers(Drift):
+class nlddmWagenmakers(Drift):
     '''Class needed to fit the nl-DDM drift on Wagenmakers' 2008 dataset, where
     4 classes of words may appear, each generating a different drift term'''
     name="Wagenmakers' nl-DDM"
@@ -29,7 +29,7 @@ class nlDDM_Wagenmakers(Drift):
         return -self.k*(x-z*self.a)*(x-self.a)*(x+self.a)
 
 
-class nlDDM_two_stimuli(Drift):
+class nlddmTwoStimuli(Drift):
     '''This class can be called when fitting the drift for an experiment with
     two stimulus types'''
     name="Two stimuli nlDDM"
