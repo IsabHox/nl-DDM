@@ -7,7 +7,7 @@ Drift classes created to fit the DDM on our datasets
 
 from ddm.models import Drift
 
-class DDM_Wagenmakers(Drift):
+class ddmWagenmakers(Drift):
     '''Class needed to fit the nl-DDM drift on Wagenmakers' 2008 dataset, where
     4 classes of words may appear, each generating a different drift term'''
     name="Wagenmakers' DDM"
@@ -20,7 +20,7 @@ class DDM_Wagenmakers(Drift):
                else self.vNW)
         return drift
     
-class DDM_two_stimuli(Drift):
+class ddmTwoStimuli(Drift):
     '''This class can be called when fitting the drift for an experiment with
     two stimulus types'''
     name="Two stimuli DDM"
