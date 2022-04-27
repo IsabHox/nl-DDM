@@ -89,6 +89,7 @@ def nlddm(x,a,k,z):
     return -k*(x-z*a)*(x-a)*(x+a)
 
 
+
 def x_max(a,k,z):
     '''Computes the points where the nl-DDM drift reaches its max and min
     within the decision boundaries
@@ -100,7 +101,11 @@ def x_max(a,k,z):
     k (float)
         Speed parameter
     z (float)
+<<<<<<< HEAD
         Unstable fixed point, within the interval [-1,1]
+=======
+        Unstable fixed point, within the interval [-a,a]
+>>>>>>> 23eff92eaeccb5ca45bf071dc621f2e7bc077839
     
     Returns
     ------------
@@ -112,6 +117,7 @@ def x_max(a,k,z):
     assert a>0, "a must be strictly positive"
     xmin=1/3*(z-np.sqrt((z*a)**2+3*a**2))
     xmax=1/3*(z+np.sqrt((z*a)**2+3*a**2))
+
     return xmin, xmax
 
 
