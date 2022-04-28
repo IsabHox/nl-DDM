@@ -206,3 +206,23 @@ def draw_line(v,x0,t, Tnd):
         Iterable with the values of the noiseless trajectory'''
     drawn_line=v*(t-Tnd)+x0
     return drawn_line
+
+
+def word_class(arr):
+    '''Returns whether each element is an existing word or not for Wagenmakers'
+    dataset'''
+    my_class=arr<4
+    return my_class+0
+
+def word_cat(arr):
+    '''Returns the category of words (easy, hard, very hard, non-existant) in
+    an array, taken from Wagenmakers' dataset'''
+    cat=arr*(arr<4)
+    return cat
+
+def process_Wagenmakers(wagenmakers_dat):
+    filtered_dat= wagenmakers_dat[wagenmakers_dat.censor == 0] #drop practice, short and long trials
+    filtered_dat['expected_answer']=filtered_dat[['word_type']].apply(word_class)
+    filtered_dat['word_type']=filtered_dat[['word_type']].apply(word_cat)
+    filtered_dat['correct']=(filtered_dat['response']==filtered_dat['expected_answer'])+0
+    return filtered_dat
