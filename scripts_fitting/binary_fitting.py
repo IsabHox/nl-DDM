@@ -5,37 +5,35 @@ Fitting my data
 @author: ihoxha
 """
 #%% imports
-from os import listdir
 import pandas as pd
+import numpy as np
 
 import ddm
 from ddm import Model, Fittable
 from ddm.model import NoiseConstant, BoundConstant
 
 import sys
-sys.path.append('../')
-sys.path.append('../pyddm_extensions/')
+sys.path.append('./../')
+sys.path.append('./../pyddm_extensions/')
 
 from DDM import ddmTwoStimuli
 from nlDDM import nlddmTwoStimuli
 from extras import OverlayNonDecisionLR, ICIntervalRatio
 
-#%% load data
-filepaths=listdir('D:/PhD/EEG data/behavioral/')
-already_passed=['add','dat','new']
-subjects=[f[0:3] for f in filepaths if f[0:3] not in already_passed]#
+#%% load data (this will be changed after upload of the dataset on Zenodo)
+data_file=pd.read_csv(r'D:\PhD\data to share\RT_data.csv')
+subjects=np.unique(data_file.Subject)
 
-#%%
+#%% select participant data
 for s in range (len(subjects)):
     subject=subjects[s]
-    print(subject)
-    data_df=pd.read_csv('D:/PhD/EEG data/behavioral/{}.csv'.format(subject))#+filepaths[s]
-    stimuli=data_df['Stimulus'].to_numpy()
-    RTs=data_df['RT'].to_numpy()
-    responses=data_df['Response'].to_numpy()
+    data_df=data_file[data_file['Subject'] == subject]
+    #stimuli=data_df['Stimulus'].to_numpy()
+    #RTs=data_df['RT'].to_numpy()
+    #responses=data_df['Response'].to_numpy()
 
-        
-    #%% Here, we create our model
+
+    #%% Here, we create our models
     a=Fittable(minval = .1, maxval = 5)
     m=Model(name="my ADM", drift=nlddmTwoStimuli(k=Fittable(minval = 0.1, maxval = 10),
                                       a=a,
@@ -67,3 +65,6 @@ for s in range (len(subjects)):
             dx=0.005,
             dt=0.005,
             T_dur=2.0)
+    
+    #%% and now, the fitting stage
+    
