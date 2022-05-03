@@ -13,7 +13,7 @@ import ddm
 from ddm import Model, Fittable
 from ddm.sample import Sample
 from ddm.models import NoiseConstant, BoundConstant, LossRobustLikelihood
-from ddm.functions import fit_adjust_model
+from ddm.functions import fit_adjust_model, get_model_loss
 
 import sys
 sys.path.append('./../../src/')
@@ -21,7 +21,7 @@ sys.path.append('./../../src/pyddm_extensions/')
 
 from DDM import ddmTwoStimuli
 from nlDDM import nlddmTwoStimuli
-from extras import OverlayNonDecisionLR, ICIntervalRatio
+from extras import OverlayNonDecisionLR, ICIntervalRatio, LossByMeans
 from utilities import process_binary
 
 #%% load data (this will be changed after upload of the dataset on Zenodo)
@@ -78,10 +78,26 @@ for s in range (len(subjects)):
             dt=0.005,
             T_dur=2.0)
     
-    #%% finally, some plotting !
+    #%% some plotting to enjoy the result
     plt.figure()
     ddm.plot.plot_fit_diagnostics(model=my_nlddm, sample=my_samples)
     plt.title('nl-DDM fit result for participant {}'.format(subject))
     plt.figure()
     ddm.plot.plot_fit_diagnostics(model=my_ddm, sample=my_samples)
     plt.title('DDM fit result for participant {}'.format(subject))
+    
+    #%% and on to the computation of the loss
+    sample_size=len(my_samples)
+    
+    #knowing the number of parameters fitted is needed for the BIC
+    nparams_nl=6
+    nparams_dm=5
+    
+    nl_loss=get_model_loss(my_nlddm, my_samples, lossfunction=LossRobustLikelihood)
+    dm_loss=get_model_loss(my_ddm, my_samples, lossfunction=LossRobustLikelihood)
+    
+    nl_bic=np.log(sample_size)*nparams_nl+2*nl_loss
+    dm_bic=np.log(sample_size)*nparams_dm+2*dm_loss
+    
+    nl_prediction_performance=get_model_loss(my_nlddm, my_samples, lossfunction=LossByMeans)
+    dm_prediction_performance=get_model_loss(my_ddm, my_samples, lossfunction=LossByMeans)
