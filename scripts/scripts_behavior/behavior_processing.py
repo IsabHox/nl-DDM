@@ -8,7 +8,7 @@ Scripts to compute behavioral quantities before processing in JASP
 import pandas as pd
 import numpy as np
 
-#%% load data
+#%% load data (to modify later with Zenodo)
 data_file=pd.read_csv(r'D:\PhD\data to share\RT_data.csv')
 subjects=np.unique(data_file.Subject)
 
