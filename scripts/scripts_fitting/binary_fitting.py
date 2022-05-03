@@ -16,8 +16,8 @@ from ddm.models import NoiseConstant, BoundConstant, LossRobustLikelihood
 from ddm.functions import fit_adjust_model
 
 import sys
-sys.path.append('./../')
-sys.path.append('./../pyddm_extensions/')
+sys.path.append('./../../src/')
+sys.path.append('./../../src/pyddm_extensions/')
 
 from DDM import ddmTwoStimuli
 from nlDDM import nlddmTwoStimuli
