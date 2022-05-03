@@ -226,3 +226,11 @@ def process_Wagenmakers(wagenmakers_dat):
     filtered_dat['word_type']=filtered_dat[['word_type']].apply(word_cat)
     filtered_dat['correct']=(filtered_dat['response']==filtered_dat['expected_answer'])+0
     return filtered_dat
+
+def process_binary(data_raw):
+    '''From the raw RT data, creates the column to assess whether a trial was correct'''
+    filtered_dat=data_raw
+    filtered_dat['RT']=filtered_dat['RT']*0.001 #convert ms to seconds
+    filtered_dat['side']=filtered_dat['Response']
+    filtered_dat['correct']=(filtered_dat['Stimulus']==filtered_dat['Response'])+0
+    return filtered_dat
