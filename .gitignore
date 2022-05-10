@@ -11,4 +11,5 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-data/Wagenmakers/* ! data/Wagenmakers/README.md
+data/Wagenmakers/*
+!data/Wagenmakers/README.md
