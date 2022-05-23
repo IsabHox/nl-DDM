@@ -13,4 +13,4 @@ dependencies:
   - pip:
     - paranoid-scientist==0.2.2
     - pyddm==0.5.2
-
+    - zipfile38==0.0.3
