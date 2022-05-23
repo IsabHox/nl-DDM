@@ -4,10 +4,12 @@ channels:
   - defaults
 dependencies:
   - python=3.8
-  - scipy
-  - numpy
+  - jupyter
   - matplotlib
+  - numpy
   - pathos
+  - scipy
   - pip:
     - paranoid-scientist==0.2.2
     - pyddm==0.5.2
+
