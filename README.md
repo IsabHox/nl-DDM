@@ -16,6 +16,4 @@ then activate your environment with:
 
 To reproduce figure from the paper XXX:
 
-1. Download the data
 1. Run `scripts_behavior`, `scripts_fitting` and `scripts_performance` and `Paper figures.ipynb`
-
