@@ -9,6 +9,7 @@ dependencies:
   - numpy
   - pathos
   - scipy
+  - seaborn
   - pip:
     - paranoid-scientist==0.2.2
     - pyddm==0.5.2
