@@ -101,11 +101,7 @@ def x_max(a,k,z):
     k (float)
         Speed parameter
     z (float)
-<<<<<<< HEAD
-        Unstable fixed point, within the interval [-1,1]
-=======
-        Unstable fixed point, within the interval [-a,a]
->>>>>>> 23eff92eaeccb5ca45bf071dc621f2e7bc077839
+        Unstable fixed point, within the interval [-1, 1]
     
     Returns
     ------------
