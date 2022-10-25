@@ -34,7 +34,7 @@ data_file=pd.read_csv('../../data/Binary/RT_data.csv')#r'D:\PhD\data to share\RT
 subjects=np.unique(data_file.Subject)
 
 #%% select participant data
-for s in range (1): # (len(subjects)):
+for s in range (len(subjects)):
     subject=subjects[s]
     data_raw=data_file[data_file['Subject'] == subject]
     #create the column to assess if the response was correct or not
