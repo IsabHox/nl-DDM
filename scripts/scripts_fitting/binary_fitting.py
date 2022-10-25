@@ -27,7 +27,7 @@ from extras import ICIntervalRatio, LossByMeans
 from utilities import process_binary
 
 #%% load data (this will be changed after upload of the dataset on Zenodo)
-data_file=pd.read_csv(r'..\..\data\Binary\RT_data.csv')#r'D:\PhD\data to share\RT_data.csv')
+data_file=pd.read_csv('../../data/Binary/RT_data.csv')#r'D:\PhD\data to share\RT_data.csv')
 subjects=np.unique(data_file.Subject)
 
 #%% select participant data
