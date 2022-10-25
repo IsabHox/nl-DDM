@@ -190,8 +190,8 @@ for s in range (1): # (len(subjects)):
     ou_params.loc[len(ou_params.index)]=ou_dat
     dwm_params.loc[len(dwm_params.index)]=dwm_dat
     
-    performance.loc[len(performance.index)]=[subject, nl_loss, dm_loss, ou_loss, #dw_loss,
-                                             nl_bic, dm_bic, ou_bic, #dw_bic,
+    performance.loc[len(performance.index)]=[subject, nl_loss, dm_loss, ou_loss, dw_loss,
+                                             nl_bic, dm_bic, ou_bic,dw_bic,
                                               nl_prediction_performance,
                                               dm_prediction_performance,
                                               ou_prediction_performance,
