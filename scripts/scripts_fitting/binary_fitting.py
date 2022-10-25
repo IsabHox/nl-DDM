@@ -137,10 +137,10 @@ for s in range (1): # (len(subjects)):
     sample_size=len(my_samples)
     
     #knowing the number of parameters fitted is needed for the BIC
-    nparams_nl=6
-    nparams_dm=5
-    nparams_ou=6
-    nparams_dw=5
+    nparams_nl=9
+    nparams_dm=8
+    nparams_ou=9
+    nparams_dw=10
     
     nl_loss=get_model_loss(my_nlddm, my_samples, lossfunction=LossRobustLikelihood)
     dm_loss=get_model_loss(my_ddm, my_samples, lossfunction=LossRobustLikelihood)
