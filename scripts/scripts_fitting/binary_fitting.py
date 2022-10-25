@@ -67,10 +67,6 @@ for s in range (1): # (len(subjects)):
                       lossfunction=LossRobustLikelihood, verbose=False)
     
     #%% then the DDM can be created and fitted 
-    nlddm_names=my_nlddm.get_model_parameter_names()
-    nlddm_param=my_nlddm.get_model_parameters()
-    tl_ix=nlddm_names.index('TndL')
-    tr_ix=nlddm_names.index('TndR')
     
     my_ddm=Model(name="my DDM", drift=ddmTwoStimuli(v0=Fittable(minval = 0.1, maxval = 10),
                                       v1=Fittable(minval = 0.1, maxval=10)),
