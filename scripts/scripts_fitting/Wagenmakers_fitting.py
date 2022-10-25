@@ -20,7 +20,7 @@ from extras import ICIntervalRatio, LossByMeans
 
 from ddm import Model, Fittable
 from ddm.sample import Sample
-from ddm.models import NoiseConstant, BoundConstant, OverlayNonDecision, OverlayNonDecisionUniform, LossRobustLikelihood, Drift 
+from ddm.models import NoiseConstant, BoundConstant, OverlayChain, OverlayUniformMixture, OverlayNonDecision, OverlayNonDecisionUniform, LossRobustLikelihood, Drift 
 from ddm.functions import fit_adjust_model, get_model_loss
 import ddm.plot
 
@@ -59,8 +59,10 @@ non_lin_model_acc=Model(name="my model", drift=nlddmWagenmakers(k=Fittable(minva
                                    zNW=Fittable(minval = -1, maxval=1)),#
          noise=NoiseConstant(noise=Fittable(minval=0.1, maxval=3)),
          bound=BoundConstant(B=a_nl), 
-         IC = ICIntervalRatio(x0=0, sz=Fittable(minval=0., maxval=1.)),
-         overlay=OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
+         IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)), #changed from x0=0
+         # overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)), #changed to uniform
+         overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
+                                          OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]) 
          dx=0.005,
          dt=0.005,
          T_dur=3.0)
@@ -72,7 +74,9 @@ ddm_model_acc=Model(name="my DDM", drift=ddmWagenmakers(vNW=Fittable(minval = .0
             noise=NoiseConstant(noise=Fittable(minval = 0.1, maxval = 3)),
             bound=BoundConstant(B=Fittable(minval=0.1,maxval=1)),
             IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
-            overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval=0.1, maxval=0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
+            # overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval=0.1, maxval=0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
+            overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
+                                             OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]) 
             dx=0.005,
             dt=0.005,
             T_dur=3.0)
