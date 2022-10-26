@@ -60,7 +60,7 @@ for s in range (len(subjects)):
                                              OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
             dx=0.005,
             dt=0.005,#again, a as the bound doesn't work
-            T_dur=2.0)
+            T_dur=3.0)
 
     
     #%% and then we fit it
@@ -82,7 +82,7 @@ for s in range (len(subjects)):
                                              OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
             dx=0.005,
             dt=0.005,
-            T_dur=2.0)
+            T_dur=3.0)
     
     fit_adjust_model(my_samples, my_ddm,
                       fitting_method="differential_evolution",
@@ -100,7 +100,7 @@ for s in range (len(subjects)):
                                                  OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
                 dx=0.005,
                 dt=0.005,
-                T_dur=2.0
+                T_dur=3.0
                 )
     
     fit_adjust_model(my_samples, my_ou,
@@ -120,7 +120,7 @@ for s in range (len(subjects)):
                                                   OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
                 dx=0.005,
                 dt=0.005,
-                T_dur=2.0
+                T_dur=3.0
                 )
     
     fit_adjust_model(my_samples, my_dwm,
