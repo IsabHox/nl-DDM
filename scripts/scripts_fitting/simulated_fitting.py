@@ -77,7 +77,7 @@ sim_nlddm=Model(name="non-linear model", drift=nlddmDummy(k=Fittable(minval = 0.
                                           # OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
         dx=0.005,
         dt=0.005,#again, a as the bound doesn't work
-        T_dur=Tdur)
+        T_dur=Tdur+0.005)
 
 fit_adjust_model(my_samples, sim_nlddm,
                   fitting_method="differential_evolution",
