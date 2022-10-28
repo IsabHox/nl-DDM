@@ -233,7 +233,7 @@ def process_binary(data_raw):
     return filtered_dat
 
 def import_simulated(datapath):
-    sim_table=pd.read_table(datapath, header=None, index_col='False', sep='\s+')
+    sim_table=pd.read_table(datapath, header=None, index_col=False, sep='\s+')
     sim_table.columns=['Correct', 'RT']
     tmax=sim_table['RT'].max()
     return sim_table, tmax

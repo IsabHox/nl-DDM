@@ -83,7 +83,8 @@ fit_adjust_model(my_samples, sim_nlddm,
                   fitting_method="differential_evolution",
                   method="implicit",
                   lossfunction=LossRobustLikelihood, verbose=False)
-nlddm_dat=[f'{param}{i}']
+
+nlddm_dat=['standard']
 nlddm_dat.extend([k.default() for k in sim_nlddm.get_model_parameters()])
 
 
