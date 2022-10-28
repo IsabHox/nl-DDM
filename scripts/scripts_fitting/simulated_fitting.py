@@ -8,6 +8,7 @@ Created on Thu Oct 27 08:45:12 2022
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from math import ceil
 
 import ddm
 from ddm import Model, Fittable
@@ -46,7 +47,7 @@ for param in parameters:
                                                   # OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
                 dx=0.005,
                 dt=0.005,#again, a as the bound doesn't work
-                T_dur=round(Tdur))
+                T_dur=ceil(Tdur))
         
         fit_adjust_model(my_samples, sim_nlddm,
                           fitting_method="differential_evolution",
@@ -77,7 +78,7 @@ sim_nlddm=Model(name="non-linear model", drift=nlddmDummy(k=Fittable(minval = 0.
                                           # OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
         dx=0.005,
         dt=0.005,#again, a as the bound doesn't work
-        T_dur=round(Tdur))
+        T_dur=ceil(Tdur))
 
 fit_adjust_model(my_samples, sim_nlddm,
                   fitting_method="differential_evolution",
