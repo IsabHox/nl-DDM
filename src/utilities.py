@@ -5,6 +5,7 @@ Other utilities needed to describe the nl-ddm
 @author: ihoxha
 """
 import numpy as np
+import pandas as pd
 
 def potential(x,z,a,k):
     '''the potential function associated with the nl-DDM
@@ -230,3 +231,9 @@ def process_binary(data_raw):
     filtered_dat['side']=filtered_dat['Response']
     filtered_dat['correct']=(filtered_dat['Stimulus']==filtered_dat['Response'])+0
     return filtered_dat
+
+def import_simulated(datapath):
+    sim_table=pd.read_table(datapath, header=None, index_col='False', sep='\s+')
+    sim_table.columns=['Correct', 'RT']
+    tmax=sim_table['RT'].max()
+    return sim_table, tmax
