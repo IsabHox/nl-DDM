@@ -33,8 +33,9 @@ import os
 directory='../../../simulations/'
 # for param in parameters:
 #     for i in range (1,6):
+dirlist=os.listdir(directory)
 counter=0
-for i in os.listdir(directory):
+for i in dirlist:
     counter+=1
     datapath=f'../../../simulations/{i}/sim_0.lst'
     data, Tdur=import_simulated(datapath)
