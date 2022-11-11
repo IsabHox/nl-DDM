@@ -38,8 +38,18 @@ wagenmakers_dat=pd.read_csv('../../data/Wagenmakers/SpeedAccData.txt', sep='\s+'
 #%% Preprocess data
 filtered_dat = process_Wagenmakers(wagenmakers_dat)
 
-#%% Then, we can loop across subjects or just pick one subject
+#%% check which subjects didn't perform all the blocks:
+gross_subjects=np.unique(filtered_dat['Subject'])
 subjects=np.unique(filtered_dat['Subject'])
+bad_subjects=[]
+for subject in gross_subjects:
+    subdat=filtered_dat[(filtered_dat.Subject==subject)]
+    nblock=len(np.unique(subdat.Block))
+    if nblock!=20:
+        print(subject, nblock)
+        subjects=np.delete(subjects, np.where(subjects==subject)[0])
+        
+#%% Then, we can loop across subjects or just pick one subject
 subject=subjects[0]
 
 acc_df=filtered_dat[(filtered_dat.Condition==0) & (filtered_dat.Subject==subject)]

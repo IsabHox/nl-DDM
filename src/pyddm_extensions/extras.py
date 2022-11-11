@@ -5,7 +5,7 @@ Other daughter classes that were needed when fitting the nlDDM and DDM
 @author: ihoxha
 """
 import numpy as np
-from ddm import InitialCondition, Overlay, Solution, LossFunction
+from ddm import InitialCondition, Overlay, Solution, LossFunction, Bound
 
 class ICIntervalRatio(InitialCondition):
     name = "Starting point range as a ratio of the distance between bounds."
@@ -69,3 +69,24 @@ class LossByMeans(LossFunction):
             if sols[c].prob_correct() > 0:
                 MSE += (sols[c].mean_decision_time() - np.mean(list(subset)))**2
         return MSE
+    
+class BoundsPerFatigue(Bound):
+    name='Boundary depending on Megablock and condition'
+    required_parameters = ["BA1","BA2","BA3","BA4","BA5",
+                           "BS1","BS2","BS3","BS4","BS5"]
+    required_conditions = ['Megablock','Condition']
+    def get_bound(self, conditions, *args, **kwargs):
+        my_case='A'*(conditions['Condition']==0)+'S'*(conditions['Condition']==1)
+        my_block=str(conditions['Megablock']+1)
+        my_string='B'+my_case+my_block
+        return getattr(self, my_string)
+    
+class BoundsPerCondition(Bound):
+    name='Boundary depending on Megablock and condition'
+    required_parameters = ["BA","BS"]
+    required_conditions = ['Condition']
+    def get_bound(self, conditions, *args, **kwargs):
+        if conditions['Condition']==0:
+            return self.BA
+        elif conditions['Condition']==1:
+            return self.BS

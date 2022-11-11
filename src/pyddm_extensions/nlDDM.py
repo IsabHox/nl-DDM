@@ -28,7 +28,38 @@ class nlddmWagenmakers(Drift):
             z=self.zNW
         return -self.k*(x-z*self.a)*(x-self.a)*(x+self.a)
 
-
+class nlddmFatigue(Drift):
+    namae="Wagenmakers with fatigue"
+    required_condi=['word_type','Megablock', 'Condition']
+    required_parameters=['k1','k2','k3','k4','k5', #5 k for as many megablocks
+                         'z1','z2','z3','zNW', #4 z for as many word types
+                         'a0', 'a1'] #2 a for as many conditions
+    def get_drift(self, x, t, conditions, *args, **kwargs):
+        if conditions['word_type']==1:
+            z=self.z1
+        elif conditions['word_type']==2:
+            z=self.z2
+        elif conditions['word_type']==3:
+            z=self.z3
+        else:
+            z=self.zNW
+        if conditions['Megablock']==0:
+            k=self.k1
+        elif conditions['Megablock']==1:
+            k=self.k2
+        elif conditions['Megablock']==2:
+            k=self.k3
+        elif conditions['Megablock']==3:
+            k=self.k4
+        elif conditions['Megablock']==4:
+            k=self.k5
+        if conditions['Condition']==0:
+            a=self.a0
+        else:
+            a=self.a1
+        return -k*(x-z*a)*(x-a)*(x+a) 
+    
+    
 class nlddmTwoStimuli(Drift):
     '''This class can be called when fitting the drift for an experiment with
     two stimulus types'''

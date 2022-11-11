@@ -56,9 +56,9 @@ for s in range (len(subjects)):
                                           # TndR=Fittable(minval=0.1, maxval=.8)),# change for a single
             # overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval=0.1, maxval=0.8),
             #                                   halfwidth=Fittable(minval=0., maxval=0.2)),
-            overlay = OverlayNonDecision(nondectime=Fittable(minval=0.1, maxval=0.8)), #OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
-                                             # OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))
-                                             #]),
+            overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval=0.1, maxval=0.8)), #OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
+                                              OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))
+                                             ]),
             dx=0.005,
             dt=0.005,#again, a as the bound doesn't work
             T_dur=2.0)
@@ -78,7 +78,9 @@ for s in range (len(subjects)):
             noise=NoiseConstant(noise=.3),
             bound=BoundConstant(B=a2), 
             IC = ddm.models.ic.ICUniform(), 
-            overlay = OverlayNonDecision(nondectime=Tnd), 
+            overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval=0.1, maxval=0.8)), #OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
+                                              OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))
+                                             ]),#OverlayNonDecision(nondectime=Tnd), 
             dx=0.005,
             dt=0.005,#again, a as the bound doesn't work
             T_dur=2.0)
@@ -89,24 +91,24 @@ for s in range (len(subjects)):
                   lossfunction=LossRobustLikelihood, verbose=False)
     
     #%% Here, we create our model with a mixture
-    a3=Fittable(minval = .1, maxval = 5)
-    nlddm_mix=Model(name="non-linear model", drift=nlddmTwoStimuli(k=Fittable(minval = 0.1, maxval = 10),
-                                      a=a3,
-                                      z0=Fittable(minval = -1, maxval=-.5),
-                                      z1=Fittable(minval = -1, maxval=-.5)),
-            noise=NoiseConstant(noise=.3),
-            bound=BoundConstant(B=a3), 
-            IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
-            overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
-                                             OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
-            dx=0.005,
-            dt=0.005,#again, a as the bound doesn't work
-            T_dur=2.0)
+    # a3=Fittable(minval = .1, maxval = 5)
+    # nlddm_mix=Model(name="non-linear model", drift=nlddmTwoStimuli(k=Fittable(minval = 0.1, maxval = 10),
+    #                                   a=a3,
+    #                                   z0=Fittable(minval = -1, maxval=-.5),
+    #                                   z1=Fittable(minval = -1, maxval=-.5)),
+    #         noise=NoiseConstant(noise=.3),
+    #         bound=BoundConstant(B=a3), 
+    #         IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
+    #         overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
+    #                                          OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
+    #         dx=0.005,
+    #         dt=0.005,#again, a as the bound doesn't work
+    #         T_dur=2.0)
     
-    fit_adjust_model(my_samples, nlddm_mix,
-                  fitting_method="differential_evolution",
-                  method="implicit",
-                  lossfunction=LossRobustLikelihood, verbose=False)
+    # fit_adjust_model(my_samples, nlddm_mix,
+    #               fitting_method="differential_evolution",
+    #               method="implicit",
+    #               lossfunction=LossRobustLikelihood, verbose=False)
     
     #%% then the DDM can be created and fitted 
     
@@ -117,7 +119,9 @@ for s in range (len(subjects)):
             IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0, maxval=1)),
             # overlay=OverlayNonDecisionLR(TndL=nlddm_param[tl_ix],
             #                               TndR=nlddm_param[tr_ix]),
-            overlay = OverlayNonDecision(nondectime=Fittable(minval=0.1, maxval=0.8)),
+            overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval=0.1, maxval=0.8)), #OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
+                                              OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))
+                                             ]),#OverlayNonDecision(nondectime=Fittable(minval=0.1, maxval=0.8)),
             # overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
             #                                   OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
             dx=0.005,
@@ -135,7 +139,9 @@ for s in range (len(subjects)):
             noise=NoiseConstant(noise=.3),
             bound=BoundConstant(B=Fittable(minval=0.1,maxval=2)),
             IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0, maxval=1)),
-            overlay = OverlayNonDecision(nondectime=Tnd),
+            overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval=0.1, maxval=0.8)), #OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
+                                              OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))
+                                             ]),#OverlayNonDecision(nondectime=Tnd),
             dx=0.005,
             dt=0.005,
             T_dur=2.0)
