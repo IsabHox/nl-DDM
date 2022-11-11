@@ -16,11 +16,11 @@ sys.path.append('./../../src/pyddm_extensions/')
 from utilities import process_Wagenmakers
 from nlDDM import nlddmFatigue
 from DDM import ddmWagenmakers
-from extras import ICIntervalRatio, LossByMeans
+from extras import ICIntervalRatio, LossByMeans,BoundsPerCondition, BoundsPerFatigue
 
 from ddm import Model, Fittable
 from ddm.sample import Sample
-from ddm.models import NoiseConstant, BoundConstant, OverlayChain, OverlayUniformMixture, OverlayNonDecision, OverlayNonDecisionUniform, LossRobustLikelihood, Drift,BoundsPerCondition, BoundsPerFatigue
+from ddm.models import NoiseConstant, BoundConstant, OverlayChain, OverlayUniformMixture, OverlayNonDecision, OverlayNonDecisionUniform, LossRobustLikelihood, Drift
 from ddm.functions import fit_adjust_model, get_model_loss
 import ddm.plot
 
