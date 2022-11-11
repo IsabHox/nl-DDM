@@ -79,6 +79,7 @@ class BoundsPerFatigue(Bound):
         my_case='A'*(conditions['Condition']==0)+'S'*(conditions['Condition']==1)
         my_block=str(conditions['Megablock']+1)
         my_string='B'+my_case+my_block
+        print(my_string)
         return getattr(self, my_string)
     
 class BoundsPerCondition(Bound):

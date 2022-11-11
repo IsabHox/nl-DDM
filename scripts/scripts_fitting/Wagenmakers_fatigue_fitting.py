@@ -20,7 +20,7 @@ from extras import ICIntervalRatio, LossByMeans,BoundsPerCondition, BoundsPerFat
 
 from ddm import Model, Fittable
 from ddm.sample import Sample
-from ddm.models import NoiseConstant, BoundConstant, OverlayChain, OverlayUniformMixture, OverlayNonDecision, OverlayNonDecisionUniform, LossRobustLikelihood, Drift
+from ddm.models import NoiseConstant, BoundConstant, OverlayChain, OverlayUniformMixture, OverlayNonDecision, OverlayNonDecisionUniform, LossRobustLikelihood, Drift, ICPoint
 from ddm.functions import fit_adjust_model, get_model_loss
 import ddm.plot
 
@@ -80,7 +80,8 @@ for subject in subjects:
                                        zNW=Fittable(minval = -1, maxval=1)),#
              noise=NoiseConstant(noise=.3),
              bound=BoundsPerCondition(BA=a0, BS=a1), 
-             IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)), #changed from x0=0
+             # IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)), #changed from x0=0
+             IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
              overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
                                               OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
              dx=0.005,
@@ -102,7 +103,8 @@ for subject in subjects:
                                        BS3=Fittable(minval=0.1,maxval=1),
                                        BS4=Fittable(minval=0.1,maxval=1),
                                        BS5=Fittable(minval=0.1,maxval=1),),
-                IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
+                # IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
+                IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
                 # overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval=0.1, maxval=0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
                 overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
                                                  OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]), 
@@ -132,8 +134,8 @@ for subject in subjects:
     sample_size=len(my_sample)
     
     #knowing the number of parameters fitted is needed for the BIC
-    nparams_nl=16
-    nparams_dm=19
+    nparams_nl=15
+    nparams_dm=18
     
     nl_loss=get_model_loss(non_lin_model_acc, my_sample, lossfunction=LossRobustLikelihood)
     dm_loss=get_model_loss(ddm_model_acc, my_sample, lossfunction=LossRobustLikelihood)
