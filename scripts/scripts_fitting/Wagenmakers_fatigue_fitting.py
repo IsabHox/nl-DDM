@@ -115,11 +115,11 @@ for subject in subjects:
     #%% and on to the fitting                  
     print('Processing subject number {}/{}'.format(subject,np.max(subjects)))
     
-    fit_adjust_model(my_sample, ddm_model_acc,
+    fit_adjust_model(my_sample, non_lin_model_acc,
                           fitting_method="differential_evolution",
                           method="implicit",
                           lossfunction=LossRobustLikelihood, verbose=False)
-    fit_adjust_model(my_sample, non_lin_model_acc,
+    fit_adjust_model(my_sample, ddm_model_acc,
                           fitting_method="differential_evolution",
                           method="implicit",
                           lossfunction=LossRobustLikelihood, verbose=False)
