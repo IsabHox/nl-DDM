@@ -30,7 +30,7 @@ class nlddmWagenmakers(Drift):
 
 class nlddmFatigue(Drift):
     name="Wagenmakers with fatigue"
-    required_condi=['word_type','Megablock', 'Condition']
+    required_conditions=['word_type','Megablock', 'Condition']
     required_parameters=['k1','k2','k3','k4','k5', #5 k for as many megablocks
                          'z1','z2','z3','zNW', #4 z for as many word types
                          'a0', 'a1'] #2 a for as many conditions
