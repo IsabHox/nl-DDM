@@ -59,9 +59,10 @@ for subject in gross_subjects:
         subjects=np.delete(subjects, np.where(subjects==subject)[0])
         
 #%% Then, we can loop across subjects or just pick one subject
+s=0
 for subject in subjects:
     subdat=filtered_dat[(filtered_dat.Subject==subject)]
-    sub_sample=Sample.from_pandas_dataframe(subdat, rt_column_name="RT", correct_column_name="correct")
+    my_sample=Sample.from_pandas_dataframe(subdat, rt_column_name="RT", correct_column_name="correct")
     
 #%% Instanciate models for fitting the accuracy condition
     a0=Fittable(minval = .1, maxval = 5)
@@ -81,7 +82,7 @@ for subject in subjects:
              bound=BoundsPerCondition(BA=a0, BS=a1), 
              IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)), #changed from x0=0
              overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
-                                              OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]) 
+                                              OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
              dx=0.005,
              dt=0.005,
              T_dur=3.0)
@@ -104,7 +105,7 @@ for subject in subjects:
                 IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
                 # overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval=0.1, maxval=0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
                 overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
-                                                 OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]) 
+                                                 OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]), 
                 dx=0.005,
                 dt=0.005,
                 T_dur=3.0)
@@ -112,11 +113,11 @@ for subject in subjects:
     #%% and on to the fitting                  
     print('Processing subject number {}/{}'.format(subject,np.max(subjects)))
     
-    fit_adjust_model(acc_sample, ddm_model_acc,
+    fit_adjust_model(my_sample, ddm_model_acc,
                           fitting_method="differential_evolution",
                           method="implicit",
                           lossfunction=LossRobustLikelihood, verbose=False)
-    fit_adjust_model(acc_sample, non_lin_model_acc,
+    fit_adjust_model(my_sample, non_lin_model_acc,
                           fitting_method="differential_evolution",
                           method="implicit",
                           lossfunction=LossRobustLikelihood, verbose=False)
@@ -150,7 +151,7 @@ for subject in subjects:
         col_results.extend(non_lin_model_acc.get_model_parameter_names())
         col_results.extend(ddm_model_acc.get_model_parameter_names())
         
-        results_df=pd.DataFrame(columns=col_nlDDM)
+        results_df=pd.DataFrame(columns=col_results)
         
         performance=pd.DataFrame(columns=['Subject', 'LogLoss (nlDDM)',
                                           'LogLoss (DDM)',
@@ -169,7 +170,7 @@ for subject in subjects:
                nl_bic,dm_bic,
                nl_prediction_performance,dm_prediction_performance]
     performance.loc[len(performance.index)]=perf_list
-    
+    s+=1
 #%%
 results_df.to_csv('../../results/fitting_Wagenmakers_fatigue.csv')
 
