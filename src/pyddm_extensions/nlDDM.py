@@ -29,7 +29,7 @@ class nlddmWagenmakers(Drift):
         return -self.k*(x-z*self.a)*(x-self.a)*(x+self.a)
 
 class nlddmFatigue(Drift):
-    namae="Wagenmakers with fatigue"
+    name="Wagenmakers with fatigue"
     required_condi=['word_type','Megablock', 'Condition']
     required_parameters=['k1','k2','k3','k4','k5', #5 k for as many megablocks
                          'z1','z2','z3','zNW', #4 z for as many word types
