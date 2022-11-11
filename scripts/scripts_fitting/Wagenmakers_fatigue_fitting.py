@@ -32,14 +32,14 @@ import urllib.request
 #     !wget https://www.ejwagenmakers.com/Code/2008/LexDecData.zip -P ../../data/Wagenmakers/
 # except:
     
-def download_url(url, save_path):
-    with urllib.request.urlopen(url) as dl_file:
-        with open(save_path, 'wb') as out_file:
-            out_file.write(dl_file.read())
-download_url('https://www.ejwagenmakers.com/Code/2008/LexDecData.zip','../../data/Wagenmakers/LexDecData.zip')
+# def download_url(url, save_path):
+#     with urllib.request.urlopen(url) as dl_file:
+#         with open(save_path, 'wb') as out_file:
+#             out_file.write(dl_file.read())
+# download_url('https://www.ejwagenmakers.com/Code/2008/LexDecData.zip','../../data/Wagenmakers/LexDecData.zip')
         
-with zipfile.ZipFile('../../data/Wagenmakers/LexDecData.zip','r') as zipObj:
-    myfile=zipfile.ZipFile.extract(zipObj,'SpeedAccData.txt','../../data/Wagenmakers/')
+# with zipfile.ZipFile('../../data/Wagenmakers/LexDecData.zip','r') as zipObj:
+#     myfile=zipfile.ZipFile.extract(zipObj,'SpeedAccData.txt','../../data/Wagenmakers/')
     
 column_names=['Subject','Block','Practice','Condition','Stimulus','word_type','response','RT','censor']
 wagenmakers_dat=pd.read_csv('../../data/Wagenmakers/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
