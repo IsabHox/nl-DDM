@@ -76,11 +76,28 @@ class BoundsPerFatigue(Bound):
                            "BS1","BS2","BS3","BS4","BS5"]
     required_conditions = ['Megablock','Condition']
     def get_bound(self, conditions, *args, **kwargs):
-        my_case='A'*(conditions['Condition']==0)+'S'*(conditions['Condition']==1)
-        my_block=str(conditions['Megablock']+1)
-        my_string='B'+my_case+my_block
-        print(my_string)
-        return getattr(self, my_string)
+        if conditions['Condition']==0:
+            if conditions['Megablock']+1==1:
+                return self.BA1
+            elif conditions['Megablock']+1==2:
+                return self.BA2
+            elif conditions['Megablock']+1==3:
+                return self.BA3
+            elif conditions['Megablock']+1==4:
+                return self.BA4
+            elif conditions['Megablock']+1==5:
+                return self.BA5
+        elif conditions['Condition']==1:
+            if conditions['Megablock']+1==1:
+                return self.BS1
+            elif conditions['Megablock']+1==2:
+                return self.BS2
+            elif conditions['Megablock']+1==3:
+                return self.BS3
+            elif conditions['Megablock']+1==4:
+                return self.BS4
+            elif conditions['Megablock']+1==5:
+                return self.BS5
     
 class BoundsPerCondition(Bound):
     name='Boundary depending on Megablock and condition'
