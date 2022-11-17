@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Nov 11 11:38:58 2022
+Created on Thu Nov 17 14:00:55 2022
 
 @author: ihoxha
 """
@@ -60,7 +60,7 @@ for subject in gross_subjects:
         
 #%% Then, we can loop across subjects or just pick one subject
 s=0
-subjects=[2]
+subjects=[7]
 for subject in subjects:
     subdat=filtered_dat[(filtered_dat.Subject==subject)]
     my_sample=Sample.from_pandas_dataframe(subdat, rt_column_name="RT", correct_column_name="correct")
