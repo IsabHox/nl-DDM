@@ -132,48 +132,48 @@ for subject in subjects:
     # ddm.plot.plot_fit_diagnostics(model=ddm_model_acc, sample=acc_sample)
     
     #%% computing the fitting performance
-    sample_size=len(my_sample)
+sample_size=len(my_sample)
+
+#knowing the number of parameters fitted is needed for the BIC
+nparams_nl=15
+nparams_dm=18
+
+nl_loss=non_lin_model_acc.fitresult.value()
+dm_loss=ddm_model_acc.fitresult.value()
+
+nl_bic=np.log(sample_size)*nparams_nl+2*nl_loss
+dm_bic=np.log(sample_size)*nparams_dm+2*dm_loss
+
+nl_prediction_performance=0#get_model_loss(non_lin_model_acc, my_sample, lossfunction=LossByMeans)
+dm_prediction_performance=0#get_model_loss(ddm_model_acc, my_sample, lossfunction=LossByMeans)
+
+#%% and save the results
+if s==0:
+    col_results=['Subject']
     
-    #knowing the number of parameters fitted is needed for the BIC
-    nparams_nl=15
-    nparams_dm=18
+    col_results.extend(non_lin_model_acc.get_model_parameter_names())
+    col_results.extend(ddm_model_acc.get_model_parameter_names())
     
-    nl_loss=non_lin_model_acc.fitresult.value()
-    dm_loss=ddm_model_acc.fitresult.value()
+    results_df=pd.DataFrame(columns=col_results)
     
-    nl_bic=np.log(sample_size)*nparams_nl+2*nl_loss
-    dm_bic=np.log(sample_size)*nparams_dm+2*dm_loss
+    performance=pd.DataFrame(columns=['Subject', 'LogLoss (nlDDM)',
+                                      'LogLoss (DDM)',
+                                      'BIC (nlDDM, bounded SP)', 'BIC (DDM)',
+                                      'Perf (nlDDM)','Perf (DDM)'])
     
-    nl_prediction_performance=0#get_model_loss(non_lin_model_acc, my_sample, lossfunction=LossByMeans)
-    dm_prediction_performance=0#get_model_loss(ddm_model_acc, my_sample, lossfunction=LossByMeans)
     
-    #%% and save the results
-    if s==0:
-        col_results=['Subject']
-        
-        col_results.extend(non_lin_model_acc.get_model_parameter_names())
-        col_results.extend(ddm_model_acc.get_model_parameter_names())
-        
-        results_df=pd.DataFrame(columns=col_results)
-        
-        performance=pd.DataFrame(columns=['Subject', 'LogLoss (nlDDM)',
-                                          'LogLoss (DDM)',
-                                          'BIC (nlDDM, bounded SP)', 'BIC (DDM)',
-                                          'Perf (nlDDM)','Perf (DDM)'])
-        
-        
-    result_dat=[subject]
-    
-    result_dat.extend([k.default() for k in non_lin_model_acc.get_model_parameters()])
-    result_dat.extend([k.default() for k in ddm_model_acc.get_model_parameters()])
-    
-    results_df.loc[len(results_df.index)]=result_dat
-    
-    perf_list=[subject,nl_loss,dm_loss,
-               nl_bic,dm_bic,
-               nl_prediction_performance,dm_prediction_performance]
-    performance.loc[len(performance.index)]=perf_list
-    s+=1
+result_dat=[subject]
+
+result_dat.extend([k.default() for k in non_lin_model_acc.get_model_parameters()])
+result_dat.extend([k.default() for k in ddm_model_acc.get_model_parameters()])
+
+results_df.loc[len(results_df.index)]=result_dat
+
+perf_list=[subject,nl_loss,dm_loss,
+           nl_bic,dm_bic,
+           nl_prediction_performance,dm_prediction_performance]
+performance.loc[len(performance.index)]=perf_list
+    # s+=1
 #%%
 results_df.to_csv(f'../../results/fitting_Wagenmakers_fatigue_{subject}.csv')
 
