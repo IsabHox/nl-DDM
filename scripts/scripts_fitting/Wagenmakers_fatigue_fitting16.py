@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov 17 14:04:57 2022
+Created on Fri Nov 18 14:36:24 2022
 
 @author: ihoxha
 """
@@ -60,7 +60,7 @@ for subject in gross_subjects:
         
 #%% Then, we can loop across subjects or just pick one subject
 s=0
-subjects=[5]
+subjects=[16]
 for subject in subjects:
     subdat=filtered_dat[(filtered_dat.Subject==subject)]
     my_sample=Sample.from_pandas_dataframe(subdat, rt_column_name="RT", correct_column_name="correct")
@@ -138,14 +138,14 @@ for subject in subjects:
     nparams_nl=15
     nparams_dm=18
     
-    nl_loss=get_model_loss(non_lin_model_acc, my_sample, lossfunction=LossRobustLikelihood)
-    dm_loss=get_model_loss(ddm_model_acc, my_sample, lossfunction=LossRobustLikelihood)
+    nl_loss=non_lin_model_acc.fitresult.value()
+    dm_loss=ddm_model_acc.fitresult.value()
     
     nl_bic=np.log(sample_size)*nparams_nl+2*nl_loss
     dm_bic=np.log(sample_size)*nparams_dm+2*dm_loss
     
-    nl_prediction_performance=get_model_loss(non_lin_model_acc, my_sample, lossfunction=LossByMeans)
-    dm_prediction_performance=get_model_loss(ddm_model_acc, my_sample, lossfunction=LossByMeans)
+    nl_prediction_performance=0#get_model_loss(non_lin_model_acc, my_sample, lossfunction=LossByMeans)
+    dm_prediction_performance=0#get_model_loss(ddm_model_acc, my_sample, lossfunction=LossByMeans)
     
     #%% and save the results
     if s==0:
