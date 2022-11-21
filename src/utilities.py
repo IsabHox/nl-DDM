@@ -222,12 +222,18 @@ def word_megablock(arr):
     megablock=(arr-1)//4
     return megablock
 
+def word_early_late(arr):
+    '''Returns Megablock (ie either early or late trial)'''
+    megablock=(arr-1)//10
+    return megablock
+
 def process_Wagenmakers(wagenmakers_dat):
     filtered_dat= wagenmakers_dat[wagenmakers_dat.censor == 0] #drop practice, short and long trials
     filtered_dat['expected_answer']=filtered_dat[['word_type']].apply(word_class)
     filtered_dat['word_type']=filtered_dat[['word_type']].apply(word_cat)
     filtered_dat['correct']=(filtered_dat['response']==filtered_dat['expected_answer'])+0
     filtered_dat['Megablock']=filtered_dat[['Block']].apply(word_megablock)
+    filtered_dat['Late']=filtered_dat[['Block']].apply(word_early_late)
     return filtered_dat
 
 def process_binary(data_raw):

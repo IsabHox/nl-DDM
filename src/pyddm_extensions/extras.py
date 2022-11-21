@@ -99,6 +99,23 @@ class BoundsPerFatigue(Bound):
             elif conditions['Megablock']+1==5:
                 return self.BS5
     
+class BoundsPerFatigueEarlyLate(Bound):
+    name='Boundary depending on Megablock and condition'
+    required_parameters = ["BA1","BA2",
+                           "BS1","BS2"]
+    required_conditions = ['Late','Condition']
+    def get_bound(self, conditions, *args, **kwargs):
+        if conditions['Condition']==0:
+            if conditions['Late']+1==1:
+                return self.BA1
+            elif conditions['Late']+1==2:
+                return self.BA2
+        elif conditions['Condition']==1:
+            if conditions['Late']+1==1:
+                return self.BS1
+            elif conditions['Late']+1==2:
+                return self.BS2
+            
 class BoundsPerCondition(Bound):
     name='Boundary depending on Megablock and condition'
     required_parameters = ["BA","BS"]

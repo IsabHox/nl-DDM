@@ -14,19 +14,20 @@ sys.path.append('./../../src/')
 sys.path.append('./../../src/pyddm_extensions/')
 
 from utilities import process_Wagenmakers
-from nlDDM import nlddmFatigue
+from nlDDM import nlddmFatigueEarlyLate
 from DDM import ddmWagenmakers
-from extras import ICIntervalRatio, LossByMeans,BoundsPerCondition, BoundsPerFatigue
+from extras import LossByMeans,BoundsPerCondition, BoundsPerFatigueEarlyLate
 
 from ddm import Model, Fittable
 from ddm.sample import Sample
-from ddm.models import NoiseConstant, BoundConstant, OverlayChain, OverlayUniformMixture, OverlayNonDecision, OverlayNonDecisionUniform, LossRobustLikelihood, Drift, ICPoint
+from ddm.models import NoiseConstant, BoundConstant, OverlayChain, OverlayUniformMixture, OverlayNonDecision, LossRobustLikelihood, Drift, ICPoint
 from ddm.functions import fit_adjust_model, get_model_loss
-import ddm.plot
+# import ddm.plot
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
-import urllib.request
+# import urllib.request
+from joblib import Parallel, delayed
 #%% Import data
 # try:
 #     !wget https://www.ejwagenmakers.com/Code/2008/LexDecData.zip -P ../../data/Wagenmakers/
@@ -42,7 +43,7 @@ import urllib.request
 #     myfile=zipfile.ZipFile.extract(zipObj,'SpeedAccData.txt','../../data/Wagenmakers/')
     
 column_names=['Subject','Block','Practice','Condition','Stimulus','word_type','response','RT','censor']
-wagenmakers_dat=pd.read_csv('../../../data/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
+wagenmakers_dat=pd.read_csv('../../data/Wagenmakers/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
 
 #%% Preprocess data
 filtered_dat = process_Wagenmakers(wagenmakers_dat)
@@ -59,20 +60,19 @@ for subject in gross_subjects:
         subjects=np.delete(subjects, np.where(subjects==subject)[0])
         
 #%% Then, we can loop across subjects or just pick one subject
-s=0
-subjects=[12]
-for subject in subjects:
+# s=0
+# subjects=[12]
+# for subject in subjects:
+def fitting_module(subject):
+    # s=np.where(subjects==subject)[0][0]
     subdat=filtered_dat[(filtered_dat.Subject==subject)]
     my_sample=Sample.from_pandas_dataframe(subdat, rt_column_name="RT", correct_column_name="correct")
     
 #%% Instanciate models for fitting the accuracy condition
     a0=Fittable(minval = .1, maxval = 5)
     a1=Fittable(minval = .1, maxval = 5)
-    non_lin_model_acc=Model(name="my model", drift=nlddmFatigue(k1=Fittable(minval = .1, maxval = 10),
+    non_lin_model_acc=Model(name="my model", drift=nlddmFatigueEarlyLate(k1=Fittable(minval = .1, maxval = 10),
                                         k2=Fittable(minval = .1, maxval = 10),
-                                        k3=Fittable(minval = .1, maxval = 10),
-                                        k4=Fittable(minval = .1, maxval = 10),
-                                        k5=Fittable(minval = .1, maxval = 10),
                                        a0=a0,
                                        a1=a1,
                                        z1=Fittable(minval = -1, maxval=1),#
@@ -83,7 +83,7 @@ for subject in subjects:
              bound=BoundsPerCondition(BA=a0, BS=a1), 
              # IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)), #changed from x0=0
              IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
-             overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
+             overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
                                               OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
              dx=0.005,
              dt=0.005,
@@ -94,20 +94,14 @@ for subject in subjects:
                                           v2=Fittable(minval = 0.01, maxval=1),
                                           v3=Fittable(minval = 0.01, maxval=1)),
                 noise=NoiseConstant(noise=.3),
-                bound=BoundsPerFatigue(BA1=Fittable(minval=0.1,maxval=1),
+                bound=BoundsPerFatigueEarlyLate(BA1=Fittable(minval=0.1,maxval=1),
                                        BA2=Fittable(minval=0.1,maxval=1),
-                                       BA3=Fittable(minval=0.1,maxval=1),
-                                       BA4=Fittable(minval=0.1,maxval=1),
-                                       BA5=Fittable(minval=0.1,maxval=1),
                                        BS1=Fittable(minval=0.1,maxval=1),
-                                       BS2=Fittable(minval=0.1,maxval=1),
-                                       BS3=Fittable(minval=0.1,maxval=1),
-                                       BS4=Fittable(minval=0.1,maxval=1),
-                                       BS5=Fittable(minval=0.1,maxval=1),),
+                                       BS2=Fittable(minval=0.1,maxval=1)),
                 # IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
                 IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
                 # overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval=0.1, maxval=0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
-                overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
+                overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
                                                  OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]), 
                 dx=0.005,
                 dt=0.005,
@@ -135,8 +129,8 @@ for subject in subjects:
     sample_size=len(my_sample)
     
     #knowing the number of parameters fitted is needed for the BIC
-    nparams_nl=15
-    nparams_dm=18
+    nparams_nl=11
+    nparams_dm=11
     
     nl_loss=non_lin_model_acc.fitresult.value()
     dm_loss=ddm_model_acc.fitresult.value()
@@ -148,18 +142,18 @@ for subject in subjects:
     dm_prediction_performance=0#get_model_loss(ddm_model_acc, my_sample, lossfunction=LossByMeans)
     
     #%% and save the results
-    if s==0:
-        col_results=['Subject']
-        
-        col_results.extend(non_lin_model_acc.get_model_parameter_names())
-        col_results.extend(ddm_model_acc.get_model_parameter_names())
-        
-        results_df=pd.DataFrame(columns=col_results)
-        
-        performance=pd.DataFrame(columns=['Subject', 'LogLoss (nlDDM)',
-                                          'LogLoss (DDM)',
-                                          'BIC (nlDDM, bounded SP)', 'BIC (DDM)',
-                                          'Perf (nlDDM)','Perf (DDM)'])
+    # if s==0:
+    col_results=['Subject']
+    
+    col_results.extend(non_lin_model_acc.get_model_parameter_names())
+    col_results.extend(ddm_model_acc.get_model_parameter_names())
+    
+    results_df=pd.DataFrame(columns=col_results)
+    
+    performance=pd.DataFrame(columns=['Subject', 'LogLoss (nlDDM)',
+                                      'LogLoss (DDM)',
+                                      'BIC (nlDDM, bounded SP)', 'BIC (DDM)',
+                                      'Perf (nlDDM)','Perf (DDM)'])
         
         
     result_dat=[subject]
@@ -173,8 +167,12 @@ for subject in subjects:
                nl_bic,dm_bic,
                nl_prediction_performance,dm_prediction_performance]
     performance.loc[len(performance.index)]=perf_list
-    s+=1
-#%%
-results_df.to_csv(f'../../results/fitting_Wagenmakers_fatigue_{subject}.csv')
+    # s+=1
 
-performance.to_csv(f'../../results/performance_Wagenmakers_fatigue_{subject}.csv')
+#%%
+    results_df.to_csv(f'../../results/fitting_Wagenmakers_fatigue_EL{subject}.csv')
+    
+    performance.to_csv(f'../../results/performance_Wagenmakers_fatigue_EL{subject}.csv')
+    return subject
+    
+Parallel(n_jobs=17)(delayed(fitting_module)(subject) for subject in subjects)
