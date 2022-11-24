@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Nov 11 11:38:58 2022
+Created on Thu Nov 24 16:53:59 2022
 
 @author: ihoxha
 """
@@ -14,9 +14,9 @@ sys.path.append('./../../src/')
 sys.path.append('./../../src/pyddm_extensions/')
 
 from utilities import process_Wagenmakers
-from nlDDM import nlddmFatigueEarlyLate, nlddmFatigueIsA
+from nlDDM import nlddmFatigueEarlyLate, nlddmFatigue
 from DDM import ddmWagenmakers
-from extras import LossByMeans,BoundsPerCondition, BoundsPerFatigueEarlyLate, BoundsPerConditionFatigueIsA, ICIntervalRatio
+from extras import LossByMeans,BoundsPerCondition, BoundsPerFatigueEarlyLate, BoundsPerConditionFatigue, ICIntervalRatio
 
 from ddm import Model, Fittable
 from ddm.sample import Sample
@@ -43,7 +43,7 @@ from joblib import Parallel, delayed
 #     myfile=zipfile.ZipFile.extract(zipObj,'SpeedAccData.txt','../../data/Wagenmakers/')
     
 column_names=['Subject','Block','Practice','Condition','Stimulus','word_type','response','RT','censor']
-wagenmakers_dat=pd.read_csv('../../../data/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
+wagenmakers_dat=pd.read_csv('../../data/Wagenmakers/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
 
 #%% Preprocess data
 filtered_dat = process_Wagenmakers(wagenmakers_dat)
@@ -71,7 +71,7 @@ def fitting_module(subject):
 #%% Instanciate models for fitting the accuracy condition
     a0=Fittable(minval = .1, maxval = 5)
     a1=Fittable(minval = .1, maxval = 5)
-    non_lin_model_acc=Model(name="my model", drift=nlddmFatigueIsA(k1=Fittable(minval = .1, maxval = 10),
+    non_lin_model_acc=Model(name="my model", drift=nlddmFatigueEarlyLate(k1=Fittable(minval = .1, maxval = 10),
                                         k2=Fittable(minval = .1, maxval = 10),
                                        a0=a0,
                                        a1=a1,
@@ -80,7 +80,7 @@ def fitting_module(subject):
                                        z3=Fittable(minval = -1, maxval=1),#
                                        zNW=Fittable(minval = -1, maxval=1)),#
              noise=NoiseConstant(noise=.3),
-             bound=BoundsPerConditionFatigueIsA(B0=a0, B1=a1), 
+             bound=BoundsPerCondition(B0=a0, B1=a1), 
              IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0, maxval=1)), #changed from x0=0
              # IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
              overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
@@ -172,9 +172,9 @@ def fitting_module(subject):
     # s+=1
 
 #%%
-    results_df.to_csv(f'../../results/fitting_Wagenmakers_fatigue_EL_a_bounded_{subject}.csv')
+    results_df.to_csv(f'../../results/fitting_Wagenmakers_fatigue_EL_bounded_{subject}.csv')
     
-    performance.to_csv(f'../../results/performance_Wagenmakers_fatigue_EL_a_bounded_{subject}.csv')
+    performance.to_csv(f'../../results/performance_Wagenmakers_fatigue_EL_bounded_{subject}.csv')
     return subject
     
-Parallel(n_jobs=10)(delayed(fitting_module)(subject) for subject in subjects)
+Parallel(n_jobs=16)(delayed(fitting_module)(subject) for subject in subjects)
