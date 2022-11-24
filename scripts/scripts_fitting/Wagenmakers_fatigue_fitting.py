@@ -177,4 +177,4 @@ def fitting_module(subject):
     performance.to_csv(f'../../results/performance_Wagenmakers_fatigue_EL_a_bounded_{subject}.csv')
     return subject
     
-Parallel(n_jobs=-1)(delayed(fitting_module)(subject) for subject in subjects)
+Parallel(n_jobs=16)(delayed(fitting_module)(subject) for subject in subjects)
