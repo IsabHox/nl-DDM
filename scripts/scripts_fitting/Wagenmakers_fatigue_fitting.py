@@ -81,7 +81,7 @@ def fitting_module(subject):
                                        zNW=Fittable(minval = -1, maxval=1)),#
              noise=NoiseConstant(noise=.3),
              bound=BoundsPerConditionFatigueIsA(B0=a0, B1=a1), 
-             IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)), #changed from x0=0
+             IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0, maxval=1)), #changed from x0=0
              # IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
              overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
                                               # OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))
@@ -99,7 +99,7 @@ def fitting_module(subject):
                                        BA2=Fittable(minval=0.1,maxval=1),
                                        BS1=Fittable(minval=0.1,maxval=1),
                                        BS2=Fittable(minval=0.1,maxval=1)),
-                IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
+                IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0, maxval=1)),
                 # IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
                 # overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval=0.1, maxval=0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
                 overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
