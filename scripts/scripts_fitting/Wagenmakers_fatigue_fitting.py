@@ -14,9 +14,9 @@ sys.path.append('./../../src/')
 sys.path.append('./../../src/pyddm_extensions/')
 
 from utilities import process_Wagenmakers
-from nlDDM import nlddmFatigueEarlyLate
+from nlDDM import nlddmFatigueEarlyLate, nlddmFatigueIsA
 from DDM import ddmWagenmakers
-from extras import LossByMeans,BoundsPerCondition, BoundsPerFatigueEarlyLate
+from extras import LossByMeans,BoundsPerCondition, BoundsPerFatigueEarlyLate, BoundsPerConditionFatigueIsA
 
 from ddm import Model, Fittable
 from ddm.sample import Sample
@@ -71,7 +71,7 @@ def fitting_module(subject):
 #%% Instanciate models for fitting the accuracy condition
     a0=Fittable(minval = .1, maxval = 5)
     a1=Fittable(minval = .1, maxval = 5)
-    non_lin_model_acc=Model(name="my model", drift=nlddmFatigueEarlyLate(k1=Fittable(minval = .1, maxval = 10),
+    non_lin_model_acc=Model(name="my model", drift=nlddmFatigueIsA(k1=Fittable(minval = .1, maxval = 10),
                                         k2=Fittable(minval = .1, maxval = 10),
                                        a0=a0,
                                        a1=a1,
@@ -80,11 +80,12 @@ def fitting_module(subject):
                                        z3=Fittable(minval = -1, maxval=1),#
                                        zNW=Fittable(minval = -1, maxval=1)),#
              noise=NoiseConstant(noise=.3),
-             bound=BoundsPerCondition(BA=a0, BS=a1), 
+             bound=BoundsPerConditionFatigueIsA(B0=a0, B1=a1), 
              # IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)), #changed from x0=0
              IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
              overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
-                                              OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
+                                              # OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))
+                                              ]),
              dx=0.005,
              dt=0.005,
              T_dur=3.0)
@@ -102,7 +103,8 @@ def fitting_module(subject):
                 IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
                 # overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval=0.1, maxval=0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
                 overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
-                                                 OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]), 
+                                                 # OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))
+                                                 ]), 
                 dx=0.005,
                 dt=0.005,
                 T_dur=3.0)
@@ -129,8 +131,8 @@ def fitting_module(subject):
     sample_size=len(my_sample)
     
     #knowing the number of parameters fitted is needed for the BIC
-    nparams_nl=11
-    nparams_dm=11
+    nparams_nl=10
+    nparams_dm=10
     
     nl_loss=non_lin_model_acc.fitresult.value()
     dm_loss=ddm_model_acc.fitresult.value()
@@ -170,9 +172,9 @@ def fitting_module(subject):
     # s+=1
 
 #%%
-    results_df.to_csv(f'../../results/fitting_Wagenmakers_fatigue_EL{subject}.csv')
+    results_df.to_csv(f'../../results/fitting_Wagenmakers_fatigue_EL_a_{subject}.csv')
     
-    performance.to_csv(f'../../results/performance_Wagenmakers_fatigue_EL{subject}.csv')
+    performance.to_csv(f'../../results/performance_Wagenmakers_fatigue_EL_a_{subject}.csv')
     return subject
     
 Parallel(n_jobs=17)(delayed(fitting_module)(subject) for subject in subjects)
