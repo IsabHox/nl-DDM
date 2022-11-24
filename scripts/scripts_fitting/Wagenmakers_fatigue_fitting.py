@@ -131,8 +131,8 @@ def fitting_module(subject):
     sample_size=len(my_sample)
     
     #knowing the number of parameters fitted is needed for the BIC
-    nparams_nl=10
-    nparams_dm=10
+    nparams_nl=11
+    nparams_dm=11
     
     nl_loss=non_lin_model_acc.fitresult.value()
     dm_loss=ddm_model_acc.fitresult.value()
@@ -172,9 +172,9 @@ def fitting_module(subject):
     # s+=1
 
 #%%
-    results_df.to_csv(f'../../results/fitting_Wagenmakers_fatigue_EL_a_{subject}.csv')
+    results_df.to_csv(f'../../results/fitting_Wagenmakers_fatigue_EL_a_bounded_{subject}.csv')
     
-    performance.to_csv(f'../../results/performance_Wagenmakers_fatigue_EL_a_{subject}.csv')
+    performance.to_csv(f'../../results/performance_Wagenmakers_fatigue_EL_a_bounded_{subject}.csv')
     return subject
     
-Parallel(n_jobs=17)(delayed(fitting_module)(subject) for subject in subjects)
+Parallel(n_jobs=-1)(delayed(fitting_module)(subject) for subject in subjects)
