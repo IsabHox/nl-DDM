@@ -42,7 +42,7 @@ import urllib.request
 #     myfile=zipfile.ZipFile.extract(zipObj,'SpeedAccData.txt','../../data/Wagenmakers/')
     
 column_names=['Subject','Block','Practice','Condition','Stimulus','word_type','response','RT','censor']
-wagenmakers_dat=pd.read_csv('../../../data/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
+wagenmakers_dat=pd.read_csv('../../data/Wagenmakers/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
 
 #%% Preprocess data
 filtered_dat = process_Wagenmakers(wagenmakers_dat)

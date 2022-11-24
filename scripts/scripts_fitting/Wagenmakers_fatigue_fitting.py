@@ -16,7 +16,7 @@ sys.path.append('./../../src/pyddm_extensions/')
 from utilities import process_Wagenmakers
 from nlDDM import nlddmFatigueEarlyLate, nlddmFatigueIsA
 from DDM import ddmWagenmakers
-from extras import LossByMeans,BoundsPerCondition, BoundsPerFatigueEarlyLate, BoundsPerConditionFatigueIsA
+from extras import LossByMeans,BoundsPerCondition, BoundsPerFatigueEarlyLate, BoundsPerConditionFatigueIsA, ICIntervalRatio
 
 from ddm import Model, Fittable
 from ddm.sample import Sample
@@ -43,7 +43,7 @@ from joblib import Parallel, delayed
 #     myfile=zipfile.ZipFile.extract(zipObj,'SpeedAccData.txt','../../data/Wagenmakers/')
     
 column_names=['Subject','Block','Practice','Condition','Stimulus','word_type','response','RT','censor']
-wagenmakers_dat=pd.read_csv('../../data/Wagenmakers/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
+wagenmakers_dat=pd.read_csv('../../../data/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
 
 #%% Preprocess data
 filtered_dat = process_Wagenmakers(wagenmakers_dat)
@@ -81,8 +81,8 @@ def fitting_module(subject):
                                        zNW=Fittable(minval = -1, maxval=1)),#
              noise=NoiseConstant(noise=.3),
              bound=BoundsPerConditionFatigueIsA(B0=a0, B1=a1), 
-             # IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)), #changed from x0=0
-             IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
+             IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)), #changed from x0=0
+             # IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
              overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
                                               # OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))
                                               ]),
@@ -99,8 +99,8 @@ def fitting_module(subject):
                                        BA2=Fittable(minval=0.1,maxval=1),
                                        BS1=Fittable(minval=0.1,maxval=1),
                                        BS2=Fittable(minval=0.1,maxval=1)),
-                # IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
-                IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
+                IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
+                # IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
                 # overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval=0.1, maxval=0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
                 overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
                                                  # OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))
