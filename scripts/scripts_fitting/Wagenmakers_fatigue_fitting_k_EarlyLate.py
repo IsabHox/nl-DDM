@@ -16,7 +16,7 @@ sys.path.append('./../../src/pyddm_extensions/')
 from utilities import process_Wagenmakers
 from nlDDM import nlddmFatigueEarlyLate, nlddmFatigue
 from DDM import ddmWagenmakers
-from extras import LossByMeans,BoundsPerCondition, BoundsPerFatigueEarlyLate, BoundsPerConditionFatigue, ICIntervalRatio
+from extras import LossByMeans,BoundsPerCondition, BoundsPerFatigueEarlyLate, BoundsPerCondition, ICIntervalRatio
 
 from ddm import Model, Fittable
 from ddm.sample import Sample
@@ -80,7 +80,7 @@ def fitting_module(subject):
                                        z3=Fittable(minval = -1, maxval=1),#
                                        zNW=Fittable(minval = -1, maxval=1)),#
              noise=NoiseConstant(noise=.3),
-             bound=BoundsPerCondition(B0=a0, B1=a1), 
+             bound=BoundsPerCondition(BA=a0, BS=a1), 
              IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0, maxval=1)), #changed from x0=0
              # IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
              overlay = OverlayChain(overlays=[OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
