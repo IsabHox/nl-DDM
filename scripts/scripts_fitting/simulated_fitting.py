@@ -33,7 +33,7 @@ import os
 directory='../../../simulations/'
 # for param in parameters:
 #     for i in range (1,6):
-dirlist=os.listdir(directory)
+dirlist=['b2','b3','v3','z1']#os.listdir(directory)
 counter=0
 for i in dirlist:
     counter+=1
@@ -94,4 +94,4 @@ for i in dirlist:
 # nlddm_dat.extend([k.default() for k in sim_nlddm.get_model_parameters()])
 
 
-nlddm_params.to_csv('../../results/fitting_nlDDM_simulated.csv')
+nlddm_params.to_csv('../../results/fitting_nlDDM_simulated_added.csv')

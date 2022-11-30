@@ -27,6 +27,7 @@ import ddm.plot
 import matplotlib.pyplot as plt
 
 import urllib.request
+from joblib import Parallel, delayed
 #%% Import data
 # try:
 #     !wget https://www.ejwagenmakers.com/Code/2008/LexDecData.zip -P ../../data/Wagenmakers/
@@ -59,9 +60,10 @@ for subject in gross_subjects:
         subjects=np.delete(subjects, np.where(subjects==subject)[0])
         
 #%% Then, we can loop across subjects or just pick one subject
-s=0
-subjects=[3]
-for subject in subjects:
+# s=0
+# subjects=[3]
+# for subject in subjects:
+def fitting_module(subject):
     subdat=filtered_dat[(filtered_dat.Subject==subject)]
     my_sample=Sample.from_pandas_dataframe(subdat, rt_column_name="RT", correct_column_name="correct")
     
@@ -81,8 +83,8 @@ for subject in subjects:
                                        zNW=Fittable(minval = -1, maxval=1)),#
              noise=NoiseConstant(noise=.3),
              bound=BoundsPerCondition(BA=a0, BS=a1), 
-             # IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)), #changed from x0=0
-             IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
+              IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0, maxval=1)), #changed from x0=0
+             # IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
              overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
                                               OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]),
              dx=0.005,
@@ -104,8 +106,8 @@ for subject in subjects:
                                        BS3=Fittable(minval=0.1,maxval=1),
                                        BS4=Fittable(minval=0.1,maxval=1),
                                        BS5=Fittable(minval=0.1,maxval=1),),
-                # IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0., maxval=1.)),
-                IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
+                IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0, maxval=1)),
+                # IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
                 # overlay=OverlayNonDecisionUniform(nondectime=Fittable(minval=0.1, maxval=0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
                 overlay = OverlayChain(overlays=[OverlayNonDecisionUniform(nondectime=Fittable(minval = 0.1, maxval = 0.8), halfwidth=Fittable(minval=0., maxval=0.2)),
                                                  OverlayUniformMixture(umixturecoef=Fittable(minval=0, maxval=.1))]), 
