@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov  3 15:21:36 2022
-Simulate data from nlDDM parameters and fit the DDM on the generated samples
+Created on Wed Jan 18 11:45:17 2023
+Vary x0
 @author: ihoxha
 """
 
@@ -44,10 +44,11 @@ k=5
 z=0
 x0=0
 sz=0
+
 #%% and loop
 count=0
 # for [b,x,sz,v] in itertools.product(bounds, starting_points, sp_variability,drifts):
-for a in a_collection:
+for x0 in x0_collection:
     count+=1
     #first simulate data
     a=Fittable(minval = .1, maxval = 5)
@@ -90,4 +91,4 @@ for a in a_collection:
     current_params.extend([k.default() for k in my_ddm.get_model_parameters()])
     params_df.loc[len(params_df.index)]=current_params
     
-params_df.to_csv('../../results/fitting_nlDDM_simulated_from_PyDDM_vary_a.csv')
+params_df.to_csv('../../results/fitting_nlDDM_simulated_from_PyDDM_vary_x0.csv')
