@@ -60,7 +60,7 @@ for a in a_collection:
             overlay = OverlayNonDecision(nondectime=.3),
             dx=0.001,
             dt=0.001,#again, a as the bound doesn't work
-            T_dur=2)
+            T_dur=10)
     sol = sim_nlddm.solve()
     my_samples = sol.resample(500, seed=42)
     
