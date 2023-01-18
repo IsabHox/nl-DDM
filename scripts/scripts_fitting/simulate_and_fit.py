@@ -42,8 +42,9 @@ sz_collection=np.linspace(0,1,100)
 a=1
 k=5
 z=0
-x0=0.5
-sz=0.1
+x0=0
+sz=0
+
 #%% and loop
 count=0
 # for [b,x,sz,v] in itertools.product(bounds, starting_points, sp_variability,drifts):
@@ -59,7 +60,7 @@ for a in a_collection:
             overlay = OverlayNonDecision(nondectime=.3),
             dx=0.001,
             dt=0.001,#again, a as the bound doesn't work
-            T_dur=10)
+            T_dur=2)
     sol = sim_nlddm.solve()
     my_samples = sol.resample(500, seed=42)
     
