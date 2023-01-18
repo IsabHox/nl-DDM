@@ -66,9 +66,9 @@ for a in a_collection:
     
     #then fit the DDM
     my_ddm = Model(name='Simple model',
-              drift=DriftConstant(drift=Fittable()),
+              drift=DriftConstant(drift=Fittable(minval = .01, maxval = 10)),
               noise=NoiseConstant(noise=.3),
-              bound=BoundConstant(B=Fittable()),
+              bound=BoundConstant(B=Fittable(minval=0.1,maxval=10)),
               IC=ICIntervalRatio(x0=Fittable(minval=-1,maxval=1), sz=Fittable(minval=-1,maxval=1)),
               overlay=OverlayNonDecision(nondectime=.3),
               dx=.001, dt=.001, T_dur=2)
