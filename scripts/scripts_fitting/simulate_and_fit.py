@@ -43,7 +43,7 @@ a=1
 k=5
 z=0
 x0=0
-sz=0
+sz=0.1
 #%% and loop
 count=0
 # for [b,x,sz,v] in itertools.product(bounds, starting_points, sp_variability,drifts):
