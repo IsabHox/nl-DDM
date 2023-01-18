@@ -51,7 +51,6 @@ count=0
 for k in k_collection:
     count+=1
     #first simulate data
-    a=Fittable(minval = .1, maxval = 5)
     sim_nlddm=Model(name="non-linear model", drift=nlddmDummy(k=k,
                                       a=a,
                                       z=z),

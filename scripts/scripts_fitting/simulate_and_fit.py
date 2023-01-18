@@ -42,7 +42,7 @@ sz_collection=np.linspace(0,1,100)
 a=1
 k=5
 z=0
-x0=0
+x0=0.5
 sz=0.1
 #%% and loop
 count=0
@@ -50,7 +50,6 @@ count=0
 for a in a_collection:
     count+=1
     #first simulate data
-    a=Fittable(minval = .1, maxval = 5)
     sim_nlddm=Model(name="non-linear model", drift=nlddmDummy(k=k,
                                       a=a,
                                       z=z),
