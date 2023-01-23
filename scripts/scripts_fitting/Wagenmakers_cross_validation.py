@@ -64,7 +64,7 @@ def crossvalidation(subject):
                                        m3=Fittable(minval = .10, maxval=10),#
                                        mNW=Fittable(minval = .10, maxval=10)),#
              noise=NoiseConstant(noise=.3),
-             bound=BoundsPerCondition(B0=a0, B1=a1), 
+             bound=BoundsPerCondition(BA=Fittable(minval=.1, maxval=5), BS=Fittable(minval=.1, maxval=5)), 
              IC = ICIntervalRatio(x0=Fittable(minval=-1, maxval=1), sz=Fittable(minval=0, maxval=1)), #changed from x0=0
              # IC = ICPoint(x0=Fittable(minval=0, maxval=0.1)),
              overlay = OverlayNonDecision(nondectime=Fittable(minval = 0.1, maxval = 0.8)),
@@ -133,7 +133,7 @@ def crossvalidation(subject):
     
 #%% import and process data
 column_names=['Subject','Block','Practice','Condition','Stimulus','word_type','response','RT','censor']
-wagenmakers_dat=pd.read_csv('../../data/Wagenmakers/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
+wagenmakers_dat=pd.read_csv('../data/Wagenmakers/SpeedAccData.txt', sep='\s+', header=None, names=column_names)
 
 filtered_dat = process_Wagenmakers(wagenmakers_dat)
 
