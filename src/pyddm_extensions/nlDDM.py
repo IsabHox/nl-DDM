@@ -15,8 +15,8 @@ class nlddmWagenmakers(Drift):
     '''Class needed to fit the nl-DDM drift on Wagenmakers' 2008 dataset, where
     4 classes of words may appear, each generating a different drift term'''
     name="Wagenmakers' nl-DDM"
-    required_conditions=["word_type"] #simultaneous fitting of all stimuli
-    required_parameters=["k","z1","z2","z3","zNW","a"] 
+    required_conditions=["word_type", 'Condition'] #simultaneous fitting of all stimuli
+    required_parameters=["k","z1","z2","z3","zNW","a0","a1"] 
     def get_drift(self,x,t,conditions, *args, **kwargs):
         if conditions['word_type']==1:
             z=self.z1
@@ -26,7 +26,11 @@ class nlddmWagenmakers(Drift):
             z=self.z3
         else:
             z=self.zNW
-        return -self.k*(x-z*self.a)*(x-self.a)*(x+self.a)
+        if conditions['Condition']==0:
+            a=self.a0
+        else:
+            a=self.a1
+        return -self.k*(x-z*a)*(x-a)*(x+a)
 
 class nlddmFatigue(Drift):
     name="Wagenmakers with fatigue"
