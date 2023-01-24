@@ -36,8 +36,8 @@ def crossvalidation(subject):
     subdat['stratification']=10*subdat['Block']+subdat['word_type']
     
     Xtrain, Xtest,_,_=train_test_split(subdat,subdat['word_type'],test_size=.2, random_state=42,stratify=subdat['stratification'])
-    my_sample_train=Sample.from_pandas_dataframe(subdat, rt_column_name="RT", correct_column_name="correct")
-    my_sample_test=Sample.from_pandas_dataframe(subdat, rt_column_name="RT", correct_column_name="correct")
+    my_sample_train=Sample.from_pandas_dataframe(Xtrain, rt_column_name="RT", correct_column_name="correct")
+    my_sample_test=Sample.from_pandas_dataframe(Xtest, rt_column_name="RT", correct_column_name="correct")
     
 # Instanciate models for fitting the accuracy condition
     a0=Fittable(minval = .1, maxval = 5)
@@ -145,9 +145,6 @@ for subject in gross_subjects:
     nblock=len(np.unique(subdat.Block))
     if nblock!=20:
         print(subject, nblock)
-        subjects=np.delete(subjects, np.where(subjects==subject)[0])
-    #add this line to avoid rerunning some analyses:
-    if subject==4 or subject==5:
         subjects=np.delete(subjects, np.where(subjects==subject)[0])
         
 #%% running the script
