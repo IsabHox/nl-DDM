@@ -89,8 +89,8 @@ def crossvalidation(subject):
     nparams_nl=10
     nparams_ou=10
     
-    test_nl=get_model_loss(nl, my_sample_test)
-    test_ou=get_model_loss(ou, my_sample_test)
+    test_nl=get_model_loss(nl, my_sample_test, lossfunction=LossRobustLikelihood)
+    test_ou=get_model_loss(ou, my_sample_test, lossfunction=LossRobustLikelihood)
     test_nl_bic=np.log(test_sample_size)*nparams_nl+2*test_nl
     test_ou_bic=np.log(test_sample_size)*nparams_ou+2*test_ou
     
@@ -145,6 +145,9 @@ for subject in gross_subjects:
     nblock=len(np.unique(subdat.Block))
     if nblock!=20:
         print(subject, nblock)
+        subjects=np.delete(subjects, np.where(subjects==subject)[0])
+    #add this line to avoid rerunning some analyses:
+    if subject==4 or subject==5:
         subjects=np.delete(subjects, np.where(subjects==subject)[0])
         
 #%% running the script
