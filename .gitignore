@@ -13,3 +13,6 @@ __pycache__/
 
 data/Wagenmakers/*
 !data/Wagenmakers/README.md
+
+.data
+**/.data
